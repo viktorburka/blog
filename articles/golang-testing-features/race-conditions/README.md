@@ -1,7 +1,5 @@
 ### GoLang Testing: Race Conditions
 
-It is needless to say how important the unit testing is in early detection of potential problems with our code. And GoLang team seeing value in unit tests provides nice infrastructure for writing unit tests out of the box with GoLang SDK. The capabilities are extensive and go way beyond just validating the results in a traditional unit test application where we run a unit test, then compare the results with expected values and either stop or go to the next test. Here, I will try to talk about some of them that I find quite useful.
-
 With goroutines being a part of the language itself and such a commonly used feature in Go applications, being able to validate our code for potential race conditions is a really good thing to have. The `go test` command comes with a `-race` option which instruments the code during compilation to allow it detect race condition situations. The disadvantage and the reason it is disabled by default is because the instrumentation slows down the code execution. It therefore leads to a slower unit test execution which may be an issue for projects with large code and tests base. An optimum solution would probably be to have it enabled for specific tests where the test execution time is negligible comparing to the benefit it brings.
 
 Let’s look at an example where we have a member variable of some struct which can be accessed from multiple methods and doesn't have a syncronization primitive protecting it from a concurrent access.
