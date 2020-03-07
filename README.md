@@ -8,3 +8,4 @@ It is needless to say how important the unit testing is in early detection of po
 
 [<h4>GoLang Testing: Sub-tests and Sub-benchmarks</h4>](articles/golang-testing-features/sub-tests-benchmarks/README.md)
 
+[<h4>GoLang Testing: Coverage</h4>](articles/golang-testing-features/test-coverage/README.md)

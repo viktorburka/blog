@@ -1,6 +1,6 @@
 ### GoLang Testing: Sub-tests and Sub-benchmarks
 
-While writing unit tests in GoLang, I found few usefull features that may make your unit tests more structured and easier to manage. Here I would like to share with you the following: setup and teardown, control over test parallelism and finer control of table driven benchmarks and test cases.
+While writing unit tests in GoLang, I found few useful features that may make your unit tests more structured and easier to manage. Here I would like to share with you the following: setup and teardown, control over test parallelism and finer control of table-driven benchmarks and test cases.
 
 #### Table driven tests and benchmarks
 
@@ -29,13 +29,13 @@ func TestTransitRoutes(t *testing.T) {
 }
 ```
 
-There are few disadvantages of this approach. The first one is that its not possible to selectively run test cases out of the box and contol parallel execution unless unless writing some additinal code to handle that. However there is an easier way to do that if invoke some capabilities that GoLang testing package provides.
+There are few disadvantages of this approach. The first one is that it's not possible to selectively run test cases out of the box and control parallel execution unless writing some additional code to handle that. However, there is an easier way to do that if invoke some capabilities that GoLang testing package provides.
 
-Another problem that stands out is when implementing test benchmarks in this fassion, the benchmark will measure the test suite as a whole rather than measuring the execution of each seprarate test case. A typical workaround is to implement each test case as a separate benchmark test case which calls some shared function with different params.
+Another problem that stands out is when implementing test benchmarks in this fashion, the benchmark will measure the test suite as a whole rather than measuring the execution of each separate test case. A typical workaround is to implement each test case as a separate benchmark test case which calls some shared function with different params.
 
 #### Fine control of table driven benchmarks and test cases
 
-The above problems can be solved by creating subtests via calling `t.Run` function. It takes a name string parameter as a first argument and a function to run as a second one. When a unit test is run this way, it will logically seprate each of `t.Run` invocations as a seprate sub-test or sub-benchmark.
+The above problems can be solved by creating subtests via calling `t.Run` function. It takes a name string parameter as a first argument and a function to run as a second one. When a unit test is run this way, it will logically separate each of `t.Run` invocations as a separate sub-test or sub-benchmark.
 
 ```golang
 func TestTransitRoutesSubtests(t *testing.T) {
@@ -76,7 +76,7 @@ ok  	_/transit	0.005s
 
 #### Setup and teardown
 
-For sequential tests, such as the above, setup and teardown code is pretty straightfoward. To do that, we just declare setup and teardown functions and call them before and after the place where the test code is run. Since `t.Run` method is guaraneed to return only after the test function is finished, setup and teardown functions will always be called sequentially. This comes handy when we need to maintain same global state since each new unit test should be invoked with the original state and not altered by the previous test.
+For sequential tests, such as the above, setup and teardown code is pretty straightforward. To do that, we just declare setup and teardown functions and call them before and after the place where the test code is run. Since `t.Run` method is guaranteed to return only after the test function is finished, setup and teardown functions will always be called sequentially. This comes handy when we need to maintain same global state since each new unit test should be invoked with the original state and not altered by the previous test.
 
 ```golang
 func TestTransitRoutesSubtests(t *testing.T) {
@@ -108,9 +108,9 @@ func teardown() {
 
 #### Control over test parallelism
 
-Lets now look at the sutuation where we need a parallel execution of our unit test subtests. As a reminder, in the previous example all subtests were executed sequentially, which means that any next subtest wouldn't start until the previous one is completed. If we want to test for a correct concurrency execution in that scenario, say with `-race` flag to detect race couditions that wouldn't be possible since `-race` option requires a concurrent code to be running to be to detect any anomalies.
+Let's now look at the situation where we need a parallel execution of our unit test subtests. As a reminder, in the previous example all subtests were executed sequentially, which means that any next subtest wouldn't start until the previous one is completed. If we want to test for a correct concurrency execution in that scenario, say with `-race` flag to detect race conditions that wouldn't be possible since `-race` option requires a concurrent code to be running to be to detect any anomalies.
 
-Since in the previous example a sequential execution was guaranteed, the code would never run concurrently. One way to fix that would be to spawn multiple goroutines but then we would need to control syncronization ourselves adding additional code which would mix with the test code itself reducing the readability of the test. However, there is an easier way to do that and its to invoke a `t.Parallel` method.
+Since in the previous example a sequential execution was guaranteed, the code would never run concurrently. One way to fix that would be to spawn multiple goroutines but then we would need to control synchronization ourselves adding additional code which would mix with the test code itself reducing the readability of the test. However, there is an easier way to do that and it's to invoke a `t.Parallel` method.
 
 ```golang
 func TestTransitRoutesSubtestsInParallel(t *testing.T) {
@@ -131,7 +131,7 @@ func TestTransitRoutesSubtestsInParallel(t *testing.T) {
 
 This time we run all our subtest in parallel rather than sequentially and the unit test itself won't finish until all the subtests are done. Note that in this case the order of subtest execution is not guaranteed. What is guaranteed is that all subtests will finish when the unit test returns and that all of them running concurrently won't interfere with subtests of other unit tests that run concurrently.
 
-Lets now make sure that `setup` and `teardown` functions will work if applied to this code. We can't use them in the same way we did in the previous case because even though the completion of the subtests is guaranteed, the serialization of statements within the unit tests itself and the end of subtests is not. In other words the unit test can reach the end before all the subtest will be completed. To serialize that part, we can call `t.Run` method twice.
+Let's now make sure that `setup` and `teardown` functions will work if applied to this code. We can't use them in the same way we did in the previous case because even though the completion of the subtests is guaranteed, the serialization of statements within the unit tests itself and the end of subtests is not. In other words, the unit test can reach the end before all the subtest will be completed. To serialize that part, we can call `t.Run` method twice.
 
 ```golang
 func TestTransitRoutesSubtestsInParallel(t *testing.T) {
@@ -145,7 +145,10 @@ func TestTransitRoutesSubtestsInParallel(t *testing.T) {
 				t.Log(test.line, "start")
 				t.Parallel()
 				t.Log(test.line, "run")
-				_ = tr.Direct(test.firstStation, test.endStation)
+				direct := tr.Direct(test.firstStation, test.endStation)
+				if direct != test.directTrain {
+					t.Errorf("expected: %v, got: %v", test.directTrain, direct)
+				}
 				t.Log(test.line, "end")
 			})
 		}
@@ -153,7 +156,7 @@ func TestTransitRoutesSubtestsInParallel(t *testing.T) {
 	teardown(t)
 }
 ```
-We add scope capturing code to ensure the `test` value doesn't get overwritten and the vairable doesn't get involved in a race condition. Lets run it now and make sure we see our `setup` and `teardown` being invoked properly. 
+We add scope capturing code to ensure the `test` value doesn't get overwritten and the variable doesn't get involved in a race condition. Let's run it now and make sure we see our `setup` and `teardown` being invoked properly. 
 
 ```bash
 $ go test -v -run=TestTransitRoutesSubtestsInParallel/TestGroup/green ./...

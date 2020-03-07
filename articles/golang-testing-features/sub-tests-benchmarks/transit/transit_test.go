@@ -86,7 +86,10 @@ func TestTransitRoutesSubtestsInParallel(t *testing.T) {
 				t.Log(test.line, "start")
 				t.Parallel()
 				t.Log(test.line, "run")
-				_ = tr.Direct(test.firstStation, test.endStation)
+				direct := tr.Direct(test.firstStation, test.endStation)
+				if direct != test.directTrain {
+					t.Errorf("expected: %v, got: %v", test.directTrain, direct)
+				}
 				t.Log(test.line, "end")
 			})
 		}
