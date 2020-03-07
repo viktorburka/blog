@@ -8,7 +8,12 @@ func TestComputeSize(t *testing.T) {
 		expected string
 	}
 	tests := []testData{
+		{ chestSize: 38, expected: "S" },
 		{ chestSize: 40, expected: "M" },
+		{ chestSize: 40, expected: "M" },
+		{ chestSize: 40, expected: "M" },
+		{ chestSize: 40, expected: "M" },
+		{ chestSize: 42, expected: "L" },
 		{ chestSize: 42, expected: "L" },
 	}
 	for _, test := range tests {
