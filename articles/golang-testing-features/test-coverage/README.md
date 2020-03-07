@@ -1,6 +1,6 @@
 ### GoLang Testing: Test Coverage
 
-An ultimate goal of unit testing is early detection of possible issues with the code and making that process automated. For that reason, there are numerous test cases written that test for lots of different scenarios including some rare edge cases. But how to make sure all branches of the code under test are executed and the critical ones are executed even more? One convenient tool that helps with that is a test coverage map. And GoLang provides that capability out of the box so lets look at it.
+An ultimate goal of unit testing is early detection of possible issues with the code and making that process automated. For that reason, there are numerous test cases written that test for lots of different scenarios including some rare edge cases. But how to make sure all branches of the code under test are executed and the critical ones are executed even more? One convenient tool that helps with that is a test coverage map. And GoLang provides that capability out of the box so let's look at it.
 
 #### Running A Test with Coverage
 
@@ -55,7 +55,7 @@ coverage: 42.9% of statements
 ok  	_/clothing	0.005s
 ```
 
-That was the simplest way to check the percentage of coverage but that information is limited since it doesn't help us to understand which sections we need to work on in order to enhance the code coverage. Lets run it with another option that can do it. First we run `go test` to generate a file with the coverage info
+That was the simplest way to check the percentage of coverage, but that information is limited since it doesn't help us to understand which sections, we need to work on in order to enhance the code coverage. Let's run it with another option that can do it. First, we run `go test` to generate a file with the coverage info
 
 ```bash
 $ go test -coverprofile=coverage.out
@@ -64,17 +64,17 @@ coverage: 42.9% of statements
 ok  	_/clothing	0.005s
 ```
 
-Next, we will use the previoiusly generated file and visualize it with the help of `cover` tool
+Next, we will use the previously generated file and visualize it with the help of `cover` tool
 
 ```bash
 $ go tool cover -html=coverage.out
 ```
 
-which will open the detailed html in the browser with our source code highlited with different colors that indicate coverage.
+which will open the detailed html in the browser with our source code highlighted with different colors that indicate coverage.
 
 <img align="center" src="clothing/coverage.png">
 
-Here we can see which exact lines are covered by the unit test colored with green. But what if we want to have more information in regards how many times some sections highlighted with green were executed? We can do that with `-covermode=count` option. Btw if a concurrent code is tested, there is `-atomic` option for it but it will add some overhead. So let's see what we can get. I modified my test to run some particular branches multiple times:
+Here we can see which exact lines are covered by the unit test colored with green. But what if we want to have more information in regards how many times some sections highlighted with green were executed? We can do that with `-covermode=count` option. Btw if a concurrent code is tested, there is `-atomic` option for it but it will add some overhead. So, let's see what we can get. I modified my test to run some particular branches multiple times:
 
 ```golang
 tests := []testData{
@@ -90,5 +90,5 @@ tests := []testData{
 
 <img align="center" src="clothing/heatmap.png">
 
-You can now see that some of the branches have a more satured color and some of them have less. It worth noting as well that when ran with `-cover` option or any other option that involves coverage information, it will add some overhead to the code under test since the tool actually modifies the source code to inject staments with an assignment for each of the branches. It then displays the coverage based on the fact whether that particular assignment was ran or not. That adds an average of 3% overhead to the code execution.
+You can now see that some of the branches have a more statured color and some of them have less. It worth noting as well that when ran with `-cover` option or any other option that involves coverage information, it will add some overhead to the code under test since the tool actually modifies the source code to inject statements with an assignment for each of the branches. It then displays the coverage based on the fact whether that particular assignment was running or not. That adds an average of 3% overhead to the code execution.
 
