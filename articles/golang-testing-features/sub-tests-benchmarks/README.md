@@ -1,4 +1,4 @@
-### GoLang Testing: Sub-tests and Sub-benchmarks
+### GoLang Testing: Sub-tests And Sub-benchmarks
 
 While writing unit tests in GoLang, I found few useful features that may make your unit tests more structured and easier to manage. Here I would like to share with you the following: setup and teardown, control over test parallelism and finer control of table-driven benchmarks and test cases.
 
