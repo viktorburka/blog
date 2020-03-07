@@ -90,4 +90,5 @@ tests := []testData{
 
 <img align="center" src="clothing/heatmap.png">
 
-You can now see that some of the branches have a more satured color and some of them have less.
+You can now see that some of the branches have a more satured color and some of them have less. It worth noting as well that when ran with `-cover` option or any other option that involves coverage information, it will add some overhead to the code under test since the tool actually modifies the source code to inject staments with an assignment for each of the branches. It then displays the coverage based on the fact whether that particular assignment was ran or not. That adds an average of 3% overhead to the code execution.
+
