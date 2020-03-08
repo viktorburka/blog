@@ -2,6 +2,7 @@ package bubblesort
 
 import (
 	"math/rand"
+	"strconv"
 	"testing"
 )
 
@@ -14,9 +15,14 @@ func randomData(size int) []int {
 }
 
 func BenchmarkBubbleSort(b *testing.B) {
-	data := randomData(10000)
-	b.ResetTimer()
-	for n := 0; n < b.N; n++ {
-        BubbleSort(data)
-    }
+	tests := []int{ 10000, 20000, 30000, 40000, 50000 }
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test), func(pb *testing.B) {
+			data := randomData(test)
+			b.ResetTimer()
+			for n := 0; n < b.N; n++ {
+				BubbleSort(data)
+			}
+		})
+	}
 }
